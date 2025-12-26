@@ -1,0 +1,111 @@
+const db=require('../db');
+const fs=require('fs');
+const path=require('path');
+
+const cartGet = async(req,res)=>{
+
+  try{
+    
+    const[cart]=await db.query("SELECT * FROM cart");
+    res.status(200).json(cart)
+
+  }
+  catch(error){
+
+    res.status(500).json({
+        message:"database fatching error"
+    });
+
+  }
+}
+
+const cartAdd= async (req,res)=>{
+  try{
+    const {product_id,user_id,quantity,name}=req.body;
+    if(!req.file){
+       return res.status(400).json({message:"imege is required"});
+    }
+    const image_url= req.file.filename;
+     if(!product_id || !user_id || !quantity || !name || !image_url){
+       return res.status(400).json({
+          meassage:"all fildes required"
+        });
+
+
+       }
+   await db.query(
+      "INSERT INTO cart(product_id,user_id,quantity,name,image_url) VALUES(?,?,?,?,?)",
+      [product_id,user_id,quantity,name,image_url]);
+       res.status(201).json({message:"cart successfully"});
+      
+  }
+  catch(error){
+    res.status(500).json({message:"database insert error"+error});
+
+  }
+}
+
+const cartUpdate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { product_id, user_id, quantity, name } = req.body;
+
+   
+    const [rows] = await db.query("SELECT * FROM cart WHERE id = ?", [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+  
+    let image_url = rows[0].image_url;
+    if (req.file) {
+      image_url = req.file.filename;
+    }
+
+    
+    await db.query(
+      `UPDATE cart 
+       SET product_id = ?, user_id = ?, quantity = ?, name = ?, image_url = ?
+       WHERE id = ?`,
+      [product_id, user_id, quantity, name, image_url, id]
+    );
+
+    res.status(200).json({ message: "Cart updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Database update error",
+      error: error.message,
+    });
+  }
+};
+const cartDelete = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    
+    const [rows] = await db.query("SELECT * FROM cart WHERE id = ?", [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    
+    const imagePath = path.join("uploads", rows[0].image_url);
+    if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+
+    await db.query("DELETE FROM cart WHERE id = ?", [id]);
+
+    res.status(200).json({ message: "Cart item deleted successfully" });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Database delete error",
+      error: error.message,
+    });
+  }
+};
+module.exports={cartGet,cartAdd,cartUpdate,cartDelete}
+   
+
