@@ -19,31 +19,44 @@ const cartGet = async(req,res)=>{
   }
 }
 
-const cartAdd= async (req,res)=>{
-  try{
-    const {product_id,user_id,quantity,name}=req.body;
-    if(!req.file){
-       return res.status(400).json({message:"imege is required"});
+const cartAdd = async (req, res) => {
+  try {
+    const { product_id, user_id, quantity, name } = req.body;
+
+    
+    if (!product_id || !user_id || !quantity || !name) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
-    const image_url= req.file.filename;
-     if(!product_id || !user_id || !quantity || !name || !image_url){
-       return res.status(400).json({
-          meassage:"all fildes required"
-        });
 
+  
+    if (!req.file) {
+      return res.status(400).json({
+        message: "Image is required",
+      });
+    }
 
-       }
-   await db.query(
-      "INSERT INTO cart(product_id,user_id,quantity,name,image_url) VALUES(?,?,?,?,?)",
-      [product_id,user_id,quantity,name,image_url]);
-       res.status(201).json({message:"cart successfully"});
-      
+    const image_url = req.file.filename;
+
+   
+    await db.query(
+      "INSERT INTO cart (product_id, user_id, quantity, name, image_url) VALUES (?,?,?,?,?)",
+      [product_id, user_id, quantity, name, image_url]
+    );
+
+    res.status(201).json({
+      message: "Cart added successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Database insert error",
+      error: error.message,
+    });
   }
-  catch(error){
-    res.status(500).json({message:"database insert error"+error});
+};
 
-  }
-}
 
 const cartUpdate = async (req, res) => {
   try {
