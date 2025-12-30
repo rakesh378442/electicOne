@@ -10,3 +10,4 @@ router.put("/updateProduct/:id", upload.single("image"), productUpdate);
 router.delete("/deleteProduct/:id", productDelete);
 
 module.exports = router;
+ 

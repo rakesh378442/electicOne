@@ -2,7 +2,6 @@ const db = require("../db");
 const fs = require("fs");
 const path = require("path");
 
-// GET PRODUCTS
 const productGet = async (req, res) => {
   try {
     const [products] = await db.query("SELECT * FROM electricproducts");
@@ -12,10 +11,10 @@ const productGet = async (req, res) => {
   }
 };
 
-// ADD PRODUCT
+
 const productAdd = async (req, res) => {
   try {
-    const { name, price, customer_care_number, description, brand } = req.body;
+    const { name, price,customer_care_number, description,brand } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ message: "Image is required" });
@@ -43,7 +42,7 @@ const productUpdate = async (req, res) => {
       return res.status(400).json({ message: "Product ID is required" });
     }
 
-    // 🔹 Get old image
+   
     const [rows] = await db.query(
       "SELECT image_url FROM electricproducts WHERE id=?",
       [id]
@@ -55,9 +54,9 @@ const productUpdate = async (req, res) => {
 
     let image_url = rows[0].image_url;
 
-    // 🔹 If new image uploaded
+  
     if (req.file) {
-      // delete old image
+      
       if (image_url) {
         const oldPath = path.join(__dirname, "../uploads", image_url);
         if (fs.existsSync(oldPath)) {
