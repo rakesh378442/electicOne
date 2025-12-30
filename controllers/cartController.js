@@ -30,17 +30,7 @@ const cartAdd = async (req, res) => {
         message: "All fields are required",
       });
     }
-
   
-    // if (!req.file) {
-    //   return res.status(400).json({
-    //     message: "Image is required",
-    //   });
-    // }
-
-    // const image_url = req.file.filename;
-
-   
     await db.query(
       "INSERT INTO cart (product_id, user_id, quantity, name, image_url,price) VALUES (?,?,?,?,?,?)",
       [product_id, user_id, quantity, name, image_url,price]
