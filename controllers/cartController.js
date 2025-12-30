@@ -19,30 +19,31 @@ const cartGet = async(req,res)=>{
   }
 }
 
+
 const cartAdd = async (req, res) => {
   try {
-    const { product_id, user_id, quantity, name } = req.body;
+    const { product_id, user_id, quantity, name,image_url,price} = req.body;
 
     
-    if (!product_id || !user_id || !quantity || !name) {
+    if (!product_id || !user_id || !quantity || !name || !price) {
       return res.status(400).json({
         message: "All fields are required",
       });
     }
 
   
-    if (!req.file) {
-      return res.status(400).json({
-        message: "Image is required",
-      });
-    }
+    // if (!req.file) {
+    //   return res.status(400).json({
+    //     message: "Image is required",
+    //   });
+    // }
 
-    const image_url = req.file.filename;
+    // const image_url = req.file.filename;
 
    
     await db.query(
-      "INSERT INTO cart (product_id, user_id, quantity, name, image_url) VALUES (?,?,?,?,?)",
-      [product_id, user_id, quantity, name, image_url]
+      "INSERT INTO cart (product_id, user_id, quantity, name, image_url,price) VALUES (?,?,?,?,?,?)",
+      [product_id, user_id, quantity, name, image_url,price]
     );
 
     res.status(201).json({
@@ -61,7 +62,7 @@ const cartAdd = async (req, res) => {
 const cartUpdate = async (req, res) => {
   try {
     const { id } = req.params;
-    const { product_id, user_id, quantity, name } = req.body;
+    const { product_id, user_id, quantity, name} = req.body;
 
    
     const [rows] = await db.query("SELECT * FROM cart WHERE id = ?", [id]);
