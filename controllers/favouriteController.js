@@ -2,17 +2,17 @@ const db = require("../db");
 
 const favouriteAdd = async (req, res) => {
   try {
-    const { user_id, product_id } = req.body;
+    const { user_id, product_id,name,price,image_url } = req.body;
 
-    if (!user_id || !product_id) {
+    if (!user_id || !product_id || !price || !image_url || name) {
       return res
         .status(400)
-        .json({ message: "user_id aur product_id required hai" });
+        .json({ message: "all required hai" });
     }
 
     await db.query(
-      "INSERT INTO favorites (user_id, product_id) VALUES (?, ?)",
-      [user_id, product_id]
+      "INSERT INTO favorites (user_id, product_id,name,price,image_url) VALUES (?,?,?,?,?)",
+      [user_id, product_id,name,price,image_url]
     );
 
     res.status(201).json({ message: "favorite add ho gaya" });
