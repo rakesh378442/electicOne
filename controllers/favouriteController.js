@@ -4,7 +4,7 @@ const favouriteAdd = async (req, res) => {
   try {
     const { user_id, product_id,name,price,image_url } = req.body;
 
-    if (!user_id || !product_id || !price || !image_url || name) {
+    if (!user_id || !product_id ||!name || !price || !image_url ) {
       return res
         .status(400)
         .json({ message: "all required hai" });
@@ -19,7 +19,7 @@ const favouriteAdd = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "database error: " + error.message });
+      .json({ message: "database error" + error });
   }
 };
 
@@ -28,6 +28,7 @@ const favouriteDelete= async (req,res)=>{
     try{
         
             const { id } = req.params;
+            
             if(!id){
                    return res.status(400).json({ message: "id required hai" });
             }
