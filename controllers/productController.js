@@ -86,6 +86,69 @@ const productUpdate = async (req, res) => {
     res.status(500).json({ message: "Update error " + error });
   }
 };
+const productPatch = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+
+    // 1️⃣ Existing product fetch
+    const [rows] = await db.query(
+      "SELECT * FROM electricproducts WHERE id=?",
+      [id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    let product = rows[0];
+
+    // 2️⃣ Merge incoming values only (fallback: existing)
+    const {
+      name = product.name,
+      price = product.price,
+      customer_care_number = product.customer_care_number,
+      description = product.description,
+      brand = product.brand,
+    } = req.body;
+
+    let image_url = product.image_url;
+
+    // 3️⃣ Image update (optional)
+    if (req.file) {
+      const oldPath = path.join(__dirname, "../uploads", image_url);
+
+      if (image_url && fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
+      }
+
+      image_url = req.file.filename;
+    }
+
+    // 4️⃣ Update only merged data
+    await db.query(
+      `UPDATE electricproducts
+       SET name=?, price=?, customer_care_number=?, description=?, brand=?, image_url=?
+       WHERE id=?`,
+      [
+        name,
+        price,
+        customer_care_number,
+        description,
+        brand,
+        image_url,
+        id,
+      ]
+    );
+
+    res.status(200).json({ message: "Product patched successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Patch error " + error });
+  }
+};
 
 
 const productDelete = async (req, res) => {
@@ -121,4 +184,7 @@ const productDelete = async (req, res) => {
     }
 };
 
-module.exports = { productGet, productAdd, productUpdate, productDelete };
+
+
+
+module.exports = { productGet, productAdd, productUpdate,productPatch,productDelete };
