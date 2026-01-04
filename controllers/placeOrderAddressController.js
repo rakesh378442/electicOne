@@ -119,11 +119,6 @@ const placeOrderAddressPatch = async (req, res) => {
       rows,
     });
   } catch (error) {
-    // foreign-key error handle
-    if (error.code === "ER_NO_REFERENCED_ROW_2") {
-      return res.status(400).json({ message: "Invalid user_id (foreign key failed)" });
-    }
-
     return res
       .status(500)
       .json({ message: "database connection error " + error });
