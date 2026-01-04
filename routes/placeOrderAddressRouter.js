@@ -9,6 +9,6 @@ const {
 
 router.get("/address/:id", plaseOrderAddressGet);
 router.post("/address", placeOrderAddressAdd);
-router.put("/address/:id", placeOrderAddressUpdate);
+router.patch("/address/:id", placeOrderAddressUpdate);
 
 module.exports = router;
