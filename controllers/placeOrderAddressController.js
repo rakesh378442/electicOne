@@ -2,7 +2,7 @@ const db = require("../db");
 
 const plaseOrderAddressGet = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM plaseorderaddress");
+    const [rows] = await db.query("SELECT * FROM plaseOrderAddress");
     return res.status(200).json(rows);
   } catch (error) {
     return res
@@ -26,7 +26,7 @@ const placeOrderAddressAdd = async (req, res) => {
     } = req.body;
 
     const [rows] = await db.query(
-      `INSERT INTO plaseorderaddress
+      `INSERT INTO plaseOrderAddress
       (name, phone_number, alternate_phone_number, house_number, landmark, city_name, state_name, postal_code, address_type)
       VALUES (?,?,?,?,?,?,?,?,?)`,
       [
@@ -67,7 +67,7 @@ const placeOrderAddressUpdate = async (req, res) => {
     } = req.body;
 
     const [rows] = await db.query(
-      `UPDATE plaseorderaddress
+      `UPDATE plaseOrderAddress
        SET name=?,
            phone_number=?,
            alternate_phone_number=?,
