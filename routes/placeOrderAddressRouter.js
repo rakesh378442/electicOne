@@ -7,8 +7,8 @@ const {
   placeOrderAddressUpdate
 } = require("../controllers/placeOrderAddressController");
 
-router.get("/placeGet", plaseOrderAddressGet);
-router.post("/add", placeOrderAddressAdd);
-router.put("/put/:id", placeOrderAddressUpdate);
+router.get("/address", plaseOrderAddressGet);
+router.post("/address", placeOrderAddressAdd);
+router.put("/address/:id", placeOrderAddressUpdate);
 
 module.exports = router;
