@@ -2,16 +2,12 @@ const db = require("../db");
 
 const plaseOrderAddressGet = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { user_id } = req.params;
 
     const [rows] = await db.query(
-      "SELECT * FROM plaseOrderAddress WHERE id = ?",
-      [id]
+      "SELECT * FROM plaseOrderAddress WHERE user_id = ?",
+      [user_id]
     );
-
-    if (!rows.length) {
-      return res.status(404).json({ message: "Address not found" });
-    }
 
     return res.status(200).json(rows);
   } catch (error) {
@@ -20,6 +16,7 @@ const plaseOrderAddressGet = async (req, res) => {
       .json({ message: "database connection error " + error });
   }
 };
+
 
 const placeOrderAddressAdd = async (req, res) => {
   try {
