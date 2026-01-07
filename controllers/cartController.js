@@ -114,7 +114,6 @@
    
 const db = require("../db");
 
-// GET — all cart items
 const cartGet = async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM cart");
@@ -124,7 +123,7 @@ const cartGet = async (req, res) => {
   }
 };
 
-// ADD — add to cart
+
 const cartAdd = async (req, res) => {
   try {
     const { product_id, user_id, quantity, name, image_url, price } = req.body;
@@ -148,7 +147,7 @@ const cartAdd = async (req, res) => {
   }
 };
 
-// UPDATE
+
 const cartUpdate = async (req, res) => {
   try {
     const { id } = req.params;
@@ -174,7 +173,7 @@ const cartUpdate = async (req, res) => {
   }
 };
 
-// DELETE
+
 const cartDelete = async (req, res) => {
   try {
     const { id } = req.params;
