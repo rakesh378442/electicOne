@@ -1,11 +1,16 @@
-const express=require("express");
-const router=express.Router()
-const upload=require("../middleware/multer");
-const {cartGet,cartAdd,cartUpdate,cartDelete}=require("../controllers/cartController");
+const express = require("express");
+const {
+  cartGet,
+  cartAdd,
+  cartUpdate,
+  cartDelete,
+} = require("./cart.controller");
 
-router.get("/cartsGet",cartGet);
-router.post("/cartPost",cartAdd);
-router.put("/cartPut/:id",upload.single("image") ,cartUpdate);
-router.delete("/cartDelete/:id",upload.single("image") ,cartDelete);
+const router = express.Router();
 
-module.exports=router;
+router.get("/", cartGet);
+router.post("/", cartAdd);
+router.put("/:id", cartUpdate);
+router.delete("/:id", cartDelete);
+
+module.exports = router;
